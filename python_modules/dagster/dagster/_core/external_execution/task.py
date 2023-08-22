@@ -73,7 +73,7 @@ class ExternalExecutionTask(Generic[T_TaskParams, T_TaskIOParams]):
 
     def get_base_env(self) -> Mapping[str, str]:
         return {
-            **os.environ,
+            # **os.environ,
             DAGSTER_EXTERNALS_ENV_KEYS["is_orchestration_active"]: "1",
         }
 

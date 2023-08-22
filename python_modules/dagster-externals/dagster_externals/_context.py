@@ -4,7 +4,7 @@ import os
 import warnings
 from typing import Any, ClassVar, Mapping, Optional, Sequence, TextIO
 
-from typing_extensions import Self
+from typing_extensions import Literal, Self
 
 from ._params import get_external_execution_params
 from ._protocol import (
@@ -52,12 +52,24 @@ def init_dagster_externals() -> "ExternalExecutionContext":
     return context
 
 
+def _get_storage_env() -> Literal["fs", "dbfs"]:
+    if "PYSPARK_PYTHON" in os.environ:
+        return "dbfs"
+    else:
+        return "fs"
+
+
 def _read_input(path: str) -> ExternalExecutionContextData:
+    print("STORAGE ENV", _get_storage_env())
+    print("KEYS", list(os.environ.keys()))
+    path = os.path.join("/dbfs", path.lstrip("/")) if _get_storage_env() == "dbfs" else path
+    print("PATH", path)
     with open(path, "r") as f:
         return json.load(f)
 
 
 def _get_output_stream(path: str) -> TextIO:
+    path = os.path.join("/dbfs", path.lstrip("/")) if _get_storage_env() == "dbfs" else path
     return open(path, "a")
 
 

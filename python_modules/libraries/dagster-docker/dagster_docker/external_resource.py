@@ -13,7 +13,6 @@ from dagster._core.external_execution.task import (
     ExternalExecutionTask,
     ExternalTaskIOParams,
     ExternalTaskParams,
-    SocketAddress,
 )
 from dagster_externals import (
     DAGSTER_EXTERNALS_ENV_KEYS,
@@ -88,7 +87,7 @@ class DockerExecutionTask(ExternalExecutionTask[DockerTaskParams, DockerTaskIOPa
     # ########################
 
     def _input_context_manager(
-        self, tempdir: str, sockaddr: SocketAddress
+        self, tempdir: str, _params: DockerTaskParams
     ) -> ContextManager[DockerTaskIOParams]:
         return self._file_input(tempdir)
 
@@ -106,7 +105,7 @@ class DockerExecutionTask(ExternalExecutionTask[DockerTaskParams, DockerTaskIOPa
                 os.remove(path)
 
     def _output_context_manager(
-        self, tempdir: str, params: DockerTaskParams
+        self, tempdir: str, _params: DockerTaskParams
     ) -> ContextManager[DockerTaskIOParams]:
         return self._file_output(tempdir)
 

@@ -16,7 +16,7 @@ from typing_extensions import Literal
 
 
 def _get_storage_env() -> Literal["fs", "dbfs"]:
-    if "DATABRICKS_RUNTIME_VERSION" in os.environ:
+    if "PYSPARK_PYTHON" in os.environ:
         return "dbfs"
     else:
         return "fs"
