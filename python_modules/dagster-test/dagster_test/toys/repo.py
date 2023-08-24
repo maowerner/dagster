@@ -48,6 +48,7 @@ from dagster_test.toys.run_status_sensors import (
     yield_multi_run_request_success_sensor,
     yield_run_request_succeeds_sensor,
 )
+from .asset_checks import checked_asset, always_fail, random_fail_check
 from dagster_test.toys.sleepy import sleepy_job
 from dagster_test.toys.software_defined_assets import software_defined_assets
 from dagster_test.toys.unreliable import unreliable_job
@@ -118,6 +119,9 @@ def toys_repository():
             return_multi_run_request_success_sensor,
             success_sensor_with_pipeline_run_reaction,
             instance_success_sensor,
+            checked_asset,
+            always_fail,
+            random_fail_check,
         ]
         + get_toys_schedules()
         + get_toys_sensors()
