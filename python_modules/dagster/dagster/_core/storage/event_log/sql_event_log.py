@@ -2502,7 +2502,7 @@ class SqlEventLogStorage(EventLogStorage):
             AssetCheckEvaluation, check.not_none(event.dagster_event).event_specific_data
         )
         with self.index_connection() as conn:
-            conn.execute(
+            rows_updated = conn.execute(
                 AssetCheckExecutionsTable.update()
                 .where(
                     # (asset_key, check_name, run_id) uniquely identifies the row created for the planned event
@@ -2527,8 +2527,12 @@ class SqlEventLogStorage(EventLogStorage):
                         else None
                     ),
                 )
+            ).rowcount
+        if rows_updated != 1:
+            raise DagsterInvariantViolationError(
+                "Expected to update one row for asset check evaluation, but updated"
+                f" {rows_updated}."
             )
-            # NOTE: should assert that 1 row was updated
 
     def get_asset_check_executions(
         self,
